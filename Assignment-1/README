@@ -1,3 +1,64 @@
-Assignment on handling duplicates in B+ trees
+Assignment 1: Handling duplicates in B+-trees
 
-August 2015.
+Short description: In this assignment, you will modify an existing implementation of B+-trees to handle duplicates (only insertions and lookup). This is a group assignment (to be done in groups of two).
+
+Obtaining source code:
+The existing implementation is checked in at
+https://github.com/ekvenkatesh/CS631-2015.git
+
+You can obtain it using the command
+git clone https://github.com/ekvenkatesh/CS631-2015.git
+
+In case we make any updates to the existing implementation, we will notify you on moodle. You can get the latest by running the pull command inside the directory CS631-2015.
+cd /path/to/CS631-2015
+git pull
+
+Optional: Learn and use git for versioning and merging your work
+(although you will not able to push your changes to this repository).
+
+Details:
+
+The code provided to you implements a disk-based B+-tree.  The leaves can store a record pointer, a list of record pointers, or an actual record; the implementation is agnostic to what is actually stored. We will call what is stored as the "payload", and all we care about is the length of the payload data. For this implementation, we assume that the key length and the payload length are fixed at index creation time, and are small enough so multiple keys and payloads fit in a node.  The tree is stored in a file whose name is provided at index creation time; the file name ends with a .ind suffix. 
+
+    The index file is assumed to have a 1 block header followed by data blocks. BLOCKSIZE is a #defined parameter. We compute the maximum number of entries in an internal node from the key and block pointer (file offset) size, which we assume to be 8 bytes. Similarly, for leaf nodes the maximum number of entries is computed from the key size and the payload size. 
+    The data stored in a node can be organized as int numkeys, followed by a byte array (i.e. sequence of bytes) for storing keys, followed by a byte array for storing either pointers (for internal nodes), and payload (for leaf nodes).
+        The size of the byte arrays can be computed as keylen*maxkeys, pointersize*(maxkeys+1) and payloadlen*maxkeys. 
+        In the current implementation, there are no sibling pointers for leaf nodes.
+    The keys and values in a block inside a file are stored similar to slotted page structure organization (keys reside in the initial part of the block, and pointers towards the end, and they grow in opposite directions).
+
+The code provided to you implements several functions, including 
+
+    constructors for creating an index, which are similar to file create, but take more paraters
+    constructors for index open, similar to file open, which take an index name as parameter
+    functions to insert and lookup records; the current implementation assumes no duplicate keys, and the function findFirst returns the payload for a given key.
+    functions for loading a node from disk into memory, and storing a node from memory to disk
+    internal functions for managing insert, splitting leaves, propagating splits from the leaf upwards (to propagate upwards, a stack of nodes called accessPath is maintained during insertion)
+
+Most of these functions are in the file Index.cpp, but helper functions are also present in the files FileHandler.cpp and Utils.cpp.
+
+Read the files (without necessarily going into lowest level details) to get an understanding of what the code does.
+
+
+Your Tasks:
+You will add code to complete implementation of the following functions from Index.cpp and LookupIter.cpp: ------------ [Total 50 marks]
+
+        int insert(byte key[], byte payload[]) ----------- [25 marks]
+            You should add code at the specified places to make insert work in the presence of duplicate keys. All keys with the same value (duplicates) should be on the same leaf node . If the maximum number of keys allowed in a block has been reached, and all are duplicates (say of key K), you should not insert any more duplicates of key K (These constraints ensure that duplication of keys in non-leaves is avoided)
+            You should design and implement an algorithm to split leaf nodes to adhere to the above constraints. This may lead to some underflow blocks in the leaf level. For the purpose of this assignment, we ignore this invariant (note that a real implementation must take care of ensuring that no nodes are under full, as well as support has to be provided to allow insertion of any number of duplicates).
+            Partial implementation is provided and TODOs are marked for you to fill in the required code.
+        LookupIter* find(byte key[]) --------------- [10 marks]
+            Read the existing code for function findFirst(byte* key, byte* payload) which retrieves the payload for the first matching key. You are required to implement find(byte* key) to retrieve an iterator over all results for a matching key.
+        The interface (function signatures) for LookupIter has been provided (LookupIter.cpp), with partial implementation of some functions. You will have to fill in the code for other functions. ----- [15 marks]
+
+We have provided a function display() in TreeNode.cpp which prints  all the keys in a particular node in the B+ tree. You may use this function, in combination with find() for debugging your code.
+If you are enthusiastic about doing more (but beware this may take significantly more time), you can remove the restrictions in point 1.1 above (which will result in duplicate keys at non-leaf level also) and do the implementation. This will carry 15 bonus marks (meaning much more time to earn each mark here!).
+
+Note on bonus points: In some assignments, there will be a bonus task which will fetch you bonus points. These points will be extra (top up) on top of the total marks for the assignment. However, the maximum of your total (marks + bonus points) across all assignments is upper capped by the total marks of all assignments.  The bonus tasks are usually significantly harder, so take it up only if you feel up to the challenge; not doing the bonus part will not affect you significantly if you do the basic parts properly.
+
+
+
+Provide a README containing names and roll numbers of members of your group. You should also add a short description of your implementation in your README.
+
+Submission: Only one group member should submit the assignment (on moodle), the other should submit an empty file named "Submitted by XX" where XX is the roll number of the partner who submitted the assignment. A submission link for the same will be provided on moodle.
+
+All the best!
