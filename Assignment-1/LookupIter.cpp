@@ -1,11 +1,11 @@
 #include "LookupIter.h"
 
-LookupIter::LookupIter(char *_key, KeyType _keyType, TreeNode *_node, int _position, int _paylaodLen) {
+LookupIter::LookupIter(char *_key, KeyType _keyType, TreeNode *_node, int _position, int _payloadLen) {
     key = _key;
     keyType = _keyType;
     node = _node;
     position = _position;
-    payloadlen = _paylaodLen;
+    payloadlen = _payloadLen;
     nullIter = false;
 }
 
@@ -17,37 +17,27 @@ bool LookupIter::isNull() {
     return nullIter;
 }
 
-bool isKeyEqual(int nextPos, TreeNode *node, KeyType keyType, char* key) {
-    int isEqual;
-    char * nextKey;
-    nextKey = (char *) malloc(keylen(&keyType));
-    node->getKey(keyType, nextKey, nextPos-1);
-    isEqual = compare(nextKey, key, keyType);
-
-    if(isEqual == 0){
-        return true;
-    }
-    return false;
-}
-
 bool LookupIter::hasNext() {
-    if(isNull() || (position >= node->numkeys)){
-        return false;
-    }
-    else
-        return isKeyEqual(position + 1, node, keyType, key);
+    /*
+     * TODO: Fill in code
+     *
+     * Hint: See usage in Index.cpp.main() to understand functionality
+     * Also see LookupIter.h
+     */
 }
 
 int LookupIter::next() {
-    if(hasNext()){
-        position += 1;
-        return 0;
-    }
-    return -1;
+    /*
+     * TODO: Fill in code
+     *
+     * Hint: See usage in Index.cpp.main() to understand functionality
+     * Also see LookupIter.h
+     */
 }
 
 
 int LookupIter::get(char *payload) {
-    strncpy(payload, &(node->data[DATA_SIZE - (position) * payloadlen]),payloadlen);
-    return 0;
+    /*
+     * TODO: Fill in code
+     */
 }

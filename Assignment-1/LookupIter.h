@@ -20,7 +20,7 @@ private:
 public:
 
     /* constructor to create valid lookup iter*/
-    LookupIter(char *_key, KeyType _keyType, TreeNode *_node, int _position, int _paylaodLen);
+    LookupIter(char *_key, KeyType _keyType, TreeNode *_node, int _position, int _payloadLen);
 
     /* constructor to create null lookup iter */
     LookupIter();
