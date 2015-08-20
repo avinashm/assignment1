@@ -36,7 +36,7 @@ public:
 
     /* The payload value corresponding to the current iterator position
      * will be loaded in the given char array, and 0 is returned.
-     * If there is no next, then -1 is returned. */
+     * If the payload cannot be loaded for any reason, return -1. */
     int get(char* payload);
 };
 
